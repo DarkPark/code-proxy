@@ -1,0 +1,26 @@
+{
+	"name"        : "code-proxy",
+	"version"     : "1.0.0",
+	"description" : "A debug tool to proxy js code execution from one browser to another.",
+	"main"        : "index.js",
+	"author"      : {
+		"name" : "DarkPark",
+		"email": "darkpark.main@gmail.com"
+	},
+	"repository"  : {
+		"type": "git",
+		"url" : "https://github.com/DarkPark/code-proxy"
+	},
+	"dependencies": {
+		"ws": "0.4.x"
+	},
+	"keywords": [
+		"call",
+		"exec",
+		"eval",
+		"code",
+		"proxy",
+		"browser",
+		"websocket"
+	]
+}
