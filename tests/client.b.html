@@ -2,15 +2,15 @@
 <html>
 <head>
 	<title>client.b</title>
-	<script type="text/javascript" src="http://192.168.1.71:8800/file/client.js"></script>
+	<script type="text/javascript" src="//127.0.0.1:8800/client/guest.js"></script>
 	<script type="text/javascript">
 		var name  = document.title,
-			proxy = new ProxyClient();
+			proxy = new ProxyGuest();
 
 		window.onload = function(){
 			document.body.innerHTML = name;
 
-			proxy.init({name:'b', host:'192.168.1.71'});
+			proxy.init({name:'b', host:'127.0.0.1'});
 		};
 	</script>
 </head>
