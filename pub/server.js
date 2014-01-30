@@ -3,7 +3,9 @@
  * @constructor
  * @author DarkPark
  */
-function proxyServer () {
+function ProxyServer () {
+
+	'use strict';
 
 	/**
 	 * proxy instance configuration
@@ -26,9 +28,13 @@ function proxyServer () {
 	 */
 	this.init = function ( options ) {
 		// validate and iterate input
-		if ( options ) for ( var name in options ) {
-			// rewrite defaults
-			if ( options.hasOwnProperty(name) ) config[name] = options[name];
+		if ( options ) {
+			for ( var name in options ) {
+				// rewrite defaults
+				if ( options.hasOwnProperty(name) ) {
+					config[name] = options[name];
+				}
+			}
 		}
 
 		// establish the connection
@@ -72,7 +78,7 @@ function proxyServer () {
 			result.time = +new Date() - result.time;
 			// wrap and send back
 			config.socket.send(JSON.stringify(result));
-		}
+		};
 	};
 
 	/**
@@ -80,5 +86,5 @@ function proxyServer () {
 	 */
 	this.close = function () {
 		config.socket.close();
-	}
+	};
 }

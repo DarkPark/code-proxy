@@ -3,7 +3,9 @@
  * @constructor
  * @author DarkPark
  */
-function proxyClient () {
+function ProxyClient () {
+
+	'use strict';
 
 	/**
 	 * proxy instance configuration
@@ -35,9 +37,13 @@ function proxyClient () {
 	 */
 	this.init = function ( options ) {
 		// validate and iterate input
-		if ( options ) for ( var name in options ) {
-			// rewrite defaults
-			if ( options.hasOwnProperty(name) ) config[name] = options[name];
+		if ( options ) {
+			for ( var name in options ) {
+				// rewrite defaults
+				if ( options.hasOwnProperty(name) ) {
+					config[name] = options[name];
+				}
+			}
 		}
 		// cache final request urls
 		config.urlPost = 'http://' + config.host + ':' + config.port + '/' + config.name;
@@ -51,7 +57,9 @@ function proxyClient () {
 	 */
 	this.send = function ( data ) {
 		// mandatory init check
-		if ( !config.urlPost ) return false;
+		if ( !config.urlPost ) {
+			return false;
+		}
 		// prepare
 		var time = +new Date(),
 			response;
@@ -66,11 +74,13 @@ function proxyClient () {
 			response = {error:e};
 		}
 		// detailed report
-		console.groupCollapsed('%c%s\t%c%d/%d ms',
+		console.groupCollapsed('%c[%s]\t%c%s\t%c(%d/%d ms)',
+			'color:#aaa;font-weight:normal', data.type,
 			'color:' + (response.error ? 'red' : 'green'), data.method || data.code || 'unhandled STB call',
 			'color:#aaa;font-weight:normal', response.time || 0, +new Date() - time);
-		console.log(data);
-		console.log(response.error || response.data);
+		if ( data.params    !== undefined ) { console.log('%c%s:\t', 'font-weight:bold', 'Params', data.params); }
+		if ( response.data  !== undefined ) { console.log('%c%s:\t', 'font-weight:bold', 'Result', response.data); }
+		if ( response.error !== undefined ) { console.error(response.error); }
 		console.groupEnd();
 		// ready
 		return response.data;
@@ -101,7 +111,9 @@ function proxyClient () {
 	 */
 	this.info = function () {
 		// mandatory init check
-		if ( !config.urlInfo ) return false;
+		if ( !config.urlInfo ) {
+			return false;
+		}
 		// make request
 		xhr.open('get', config.urlInfo, false);
 		xhr.send();
