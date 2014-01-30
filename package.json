@@ -1,6 +1,6 @@
 {
 	"name"        : "code-proxy",
-	"version"     : "1.0.0",
+	"version"     : "1.0.1",
 	"description" : "A debug tool to proxy js code execution from one browser to another.",
 	"main"        : "index.js",
 	"author"      : {
