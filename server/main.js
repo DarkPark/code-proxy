@@ -7,36 +7,48 @@
 
 'use strict';
 
-// globals
-var WebSocketServer = require('ws').Server,
-	wsPool = require('./wspool.js'),
-	http = require('http'),
-	fs = require('fs');
+var ws     = require('ws'),
+	fs     = require('fs'),
+	http   = require('http'),
+	wsPool = require('./wspool'),
+	config = require('./config'),
 
-// files allowed to be served
-var fileList = ['client.js', 'server.js'];
+	// files allowed to be served
+	fileList = ['guest.js', 'host.js'];
 
-module.exports = function ( config ) {
+/**
+ * Start HTTP and WebSocket servers
+ * @param {Object} [options] ports to overwrite defaults
+ */
+module.exports = function ( options ) {
+	var wss, name;
 
-	// set defaults connection ports
-	config.portHttp = config.portHttp || 8800;
-	config.portWs   = config.portWs   || 8900;
+	// validate and iterate input
+	if ( options ) {
+		for ( name in options ) {
+			// rewrite defaults
+			if ( options.hasOwnProperty(name) ) { config[name] = options[name]; }
+		}
+	}
 
 	// WebSocket server creation
-	var wss = new WebSocketServer({port: config.portWs});
+	wss = new ws.Server({port: config.portWs});
+	// push to the client list
 	wss.on('connection', function ( socket ) {
 		// new awaiting instance of WebSocket in the pool
 		wsPool.add(socket.upgradeReq.url.slice(1), socket);
 	});
+	// report
 	wss.on('listening', function () {
 		console.log('Proxy server port: %s (WebSocket)', config.portWs);
 	});
 
 	// simple http listener
 	http.createServer(function ( request, response ) {
-		console.log('http\t%s\t%s', request.method, request.url);
 		// prepare request query
-		var query = request.url.slice(1).split('/');
+		var post, query = request.url.slice(1).split('/');
+
+		console.log('http\t%s\t%s', request.method, request.url);
 
 		switch ( request.method ) {
 
@@ -45,16 +57,15 @@ module.exports = function ( config ) {
 				// first param holds the command name
 				switch ( query[0] ) {
 					// serving files
-					case 'file':
+					case 'client':
 						// one of the allowed files
 						if ( fileList.indexOf(query[1]) !== -1 ) {
 							response.writeHead(200, {'Content-Type': 'application/javascript; charset=utf-8'});
-							response.end(fs.readFileSync(__dirname + '/pub/' + query[1]));
+							response.end(fs.readFileSync(__dirname + '/client/' + query[1]));
 						}
 						break;
 					// get connection info
 					case 'info':
-						//var wsItem = wsList.get(query[1]);
 						response.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
 						response.end(JSON.stringify(wsPool.info(query[1])));
 						break;
@@ -62,7 +73,7 @@ module.exports = function ( config ) {
 					default:
 						// not valid url or root
 						response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-						response.end(fs.readFileSync(__dirname + '/pub/start.html'));
+						response.end(fs.readFileSync(__dirname + '/client/index.html'));
 				}
 				break;
 
@@ -80,11 +91,13 @@ module.exports = function ( config ) {
 
 			// accept connections from desktop clients
 			case 'POST':
-				var post = '';
+				post = '';
+
 				// append all chunks
 				request.on('data', function ( data ) {
 					post += data;
 				});
+
 				// everything is ready to send to the STB
 				request.on('end', function () {
 					// prepare
@@ -100,7 +113,14 @@ module.exports = function ( config ) {
 			default:
 				response.end('wrong request!');
 		}
+
 	}).listen(config.portHttp).on('listening', function () {
 		console.log('Proxy server port: %s (HTTP)', config.portHttp);
 	});
 };
+
+
+// direct execution
+if ( require.main === module ) {
+	module.exports();
+}

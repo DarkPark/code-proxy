@@ -4,7 +4,7 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
  */
-function ProxyClient () {
+function ProxyGuest () {
 
 	'use strict';
 
@@ -20,35 +20,36 @@ function ProxyClient () {
 		port : 8800,
 
 		/** session name */
-		name : 'anonymous',
+		name : 'anonymous'
+	},
 
-		/** cached url for posting requests */
-		urlPost : null,
+	// cached url for posting requests
+	urlPost = null,
 
-		/** cached url for info collecting */
-		urlInfo : null
-	};
+	// cached url for info collecting
+	urlInfo = null,
 
 	// single ajax object for performance
-	var xhr = new XMLHttpRequest();
+	xhr = new XMLHttpRequest();
 
 	/**
 	 * Prepares the connection
-	 * @param {Object} options set of initialization parameters (host, port, name, urlPost, urlInfo)
+	 * @param {Object} options set of initialization parameters (host, port, name)
 	 */
 	this.init = function ( options ) {
+		var name;
+
 		// validate and iterate input
 		if ( options ) {
-			for ( var name in options ) {
+			for ( name in options ) {
 				// rewrite defaults
-				if ( options.hasOwnProperty(name) ) {
-					config[name] = options[name];
-				}
+				if ( options.hasOwnProperty(name) ) { config[name] = options[name]; }
 			}
 		}
+
 		// cache final request urls
-		config.urlPost = 'http://' + config.host + ':' + config.port + '/' + config.name;
-		config.urlInfo = 'http://' + config.host + ':' + config.port + '/info/' + config.name;
+		urlPost = 'http://' + config.host + ':' + config.port + '/' + config.name;
+		urlInfo = 'http://' + config.host + ':' + config.port + '/info/' + config.name;
 	};
 
 	/**
@@ -57,23 +58,27 @@ function ProxyClient () {
 	 * @return {*} execution result from the STB
 	 */
 	this.send = function ( data ) {
-		// mandatory init check
-		if ( !config.urlPost ) {
-			return false;
-		}
 		// prepare
 		var time = +new Date(),
 			response;
+
+		// mandatory init check
+		if ( !urlPost ) {
+			return false;
+		}
+
 		// make request
-		xhr.open('post', config.urlPost, false);
+		xhr.open('post', urlPost, false);
 		xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
 		xhr.send(JSON.stringify(data));
+
 		// proceed the result
 		try {
 			response = JSON.parse(xhr.responseText);
 		} catch ( e ) {
 			response = {error:e};
 		}
+
 		// detailed report
 		console.groupCollapsed('%c[%s]\t%c%s\t%c(%d/%d ms)',
 			'color:#aaa;font-weight:normal', data.type,
@@ -83,6 +88,7 @@ function ProxyClient () {
 		if ( response.data  !== undefined ) { console.log('%c%s:\t', 'font-weight:bold', 'Result', response.data); }
 		if ( response.error !== undefined ) { console.error(response.error); }
 		console.groupEnd();
+
 		// ready
 		return response.data;
 	};
@@ -112,12 +118,14 @@ function ProxyClient () {
 	 */
 	this.info = function () {
 		// mandatory init check
-		if ( !config.urlInfo ) {
+		if ( !urlInfo ) {
 			return false;
 		}
+
 		// make request
-		xhr.open('get', config.urlInfo, false);
+		xhr.open('get', urlInfo, false);
 		xhr.send();
+
 		return JSON.parse(xhr.responseText || false);
 	};
 }

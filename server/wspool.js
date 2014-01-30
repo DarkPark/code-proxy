@@ -21,6 +21,7 @@ module.exports = {
 	 */
 	add : function ( name, socket ) {
 		var self = this;
+
 		// check input
 		if ( name && socket ) {
 			console.log('ws\tINIT\t[%s]\tconnection', name);
@@ -48,6 +49,7 @@ module.exports = {
 			});
 			return true;
 		}
+
 		// failure
 		console.log('ws\tINIT\t[%s]\tfail to connect (wrong name or link)', name);
 		return false;
@@ -64,6 +66,7 @@ module.exports = {
 			console.log('ws\tEXIT\t[%s]\tclose', name);
 			return delete pool[name];
 		}
+
 		// failure
 		console.log('ws\tDEL\t[%s]\tfail to remove (invalid connection)', name);
 		return false;
@@ -82,6 +85,7 @@ module.exports = {
 				count  : pool[name].count
 			};
 		}
+
 		// failure
 		return {active:false};
 	},
@@ -104,6 +108,7 @@ module.exports = {
 			pool[name].count++;
 			return true;
 		}
+
 		// failure
 		console.log('ws\tSEND\t[%s]\tfail to send (invalid connection)', name);
 		return false;

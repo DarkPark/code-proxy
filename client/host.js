@@ -4,7 +4,7 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
  */
-function ProxyServer () {
+function ProxyHost () {
 
 	'use strict';
 
@@ -28,13 +28,13 @@ function ProxyServer () {
 	 * @param {Object} options set of initialization parameters (host, port, name)
 	 */
 	this.init = function ( options ) {
+		var name;
+
 		// validate and iterate input
 		if ( options ) {
-			for ( var name in options ) {
+			for ( name in options ) {
 				// rewrite defaults
-				if ( options.hasOwnProperty(name) ) {
-					config[name] = options[name];
-				}
+				if ( options.hasOwnProperty(name) ) { config[name] = options[name]; }
 			}
 		}
 
@@ -53,10 +53,12 @@ function ProxyServer () {
 
 		// message from a desktop browser
 		config.socket.onmessage = function ( message ) {
-			console.log('socket.onmessage', config.name);
 			// prepare
 			var result = {time:+new Date()},
 				request;
+
+			console.log('socket.onmessage', config.name);
+
 			// proceed the message
 			try {
 				request = JSON.parse(message.data || false);
@@ -75,6 +77,7 @@ function ProxyServer () {
 				console.log(e);
 				result.error = e;
 			}
+
 			// time taken
 			result.time = +new Date() - result.time;
 			// wrap and send back
