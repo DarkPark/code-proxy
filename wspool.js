@@ -1,6 +1,7 @@
 /**
  * WebSocket pool
  * wraps all the work with ws instances
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
  */
 

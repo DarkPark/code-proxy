@@ -1,6 +1,7 @@
 /**
  * STB Proxy desktop browser (client) part
  * @constructor
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
  */
 function ProxyClient () {

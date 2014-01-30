@@ -1,6 +1,7 @@
 /**
  * STB Proxy server node.js part
  * handles all requests between desktop browser (client) and server (stb device)
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
  */
 

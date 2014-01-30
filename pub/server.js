@@ -1,6 +1,7 @@
 /**
  * STB Proxy device (server) side
  * @constructor
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
  */
 function ProxyServer () {
