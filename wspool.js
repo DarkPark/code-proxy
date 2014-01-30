@@ -4,6 +4,8 @@
  * @author DarkPark
  */
 
+'use strict';
+
 // named WebSocket list
 var pool = {};
 
