@@ -1,8 +1,8 @@
 {
 	"name"        : "code-proxy",
-	"version"     : "1.0.1",
+	"version"     : "1.1.0",
 	"description" : "A debug tool to proxy js code execution from one browser to another.",
-	"main"        : "index.js",
+	"main"        : "server/main.js",
 	"author"      : {
 		"name" : "DarkPark",
 		"email": "darkpark.main@gmail.com"
