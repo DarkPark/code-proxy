@@ -61,7 +61,7 @@ module.exports = function ( options ) {
 						// one of the allowed files
 						if ( fileList.indexOf(query[1]) !== -1 ) {
 							response.writeHead(200, {'Content-Type': 'application/javascript; charset=utf-8'});
-							response.end(fs.readFileSync(__dirname + '/client/' + query[1]));
+							response.end(fs.readFileSync(__dirname + '/../client/' + query[1]));
 						}
 						break;
 					// get connection info
@@ -73,7 +73,7 @@ module.exports = function ( options ) {
 					default:
 						// not valid url or root
 						response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-						response.end(fs.readFileSync(__dirname + '/client/index.html'));
+						response.end(fs.readFileSync(__dirname + '/../client/index.html'));
 				}
 				break;
 
