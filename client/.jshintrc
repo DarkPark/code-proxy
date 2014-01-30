@@ -17,5 +17,9 @@
 	"globalstrict": true,
 	"trailing"    : true,
 	"quotmark"    : "single",
-	"node"        : true
+	"browser"     : true,
+	"evil"        : true,
+	"globals"     : {
+		"console": false
+	}
 }
