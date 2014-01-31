@@ -4,13 +4,12 @@
 	<title>server.a</title>
 	<script type="text/javascript" src="http://127.0.0.1:8800/client/host.js"></script>
 	<script type="text/javascript">
-		var name  = document.title,
-			proxy = new ProxyHost();
+		var proxy = new ProxyHost();
 
 		window.onload = function(){
-			document.body.innerHTML = name;
+			document.body.innerHTML = document.title;
 
-			proxy.init({name:'a', host:'127.0.0.1'});
+			proxy.init({name:'/', host:'127.0.0.1'});
 		};
 	</script>
 </head>

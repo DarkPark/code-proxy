@@ -4,11 +4,10 @@
 	<title>client.b</title>
 	<script type="text/javascript" src="http://127.0.0.1:8800/client/guest.js"></script>
 	<script type="text/javascript">
-		var name  = document.title,
-			proxy = new ProxyGuest();
+		var proxy = new ProxyGuest();
 
 		window.onload = function(){
-			document.body.innerHTML = name;
+			document.body.innerHTML = document.title;
 
 			proxy.init({name:'b', host:'127.0.0.1'});
 		};
