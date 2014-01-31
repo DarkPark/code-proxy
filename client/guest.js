@@ -47,6 +47,9 @@ function ProxyGuest () {
 			}
 		}
 
+		// there may be some special chars
+		config.name = encodeURIComponent(config.name);
+
 		// cache final request urls
 		urlPost = 'http://' + config.host + ':' + config.port + '/' + config.name;
 		urlInfo = 'http://' + config.host + ':' + config.port + '/info/' + config.name;

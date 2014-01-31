@@ -38,6 +38,9 @@ function ProxyHost () {
 			}
 		}
 
+		// there may be some special chars
+		config.name = encodeURIComponent(config.name);
+
 		// establish the connection
 		config.socket = new WebSocket('ws://' + config.host + ':' + config.port + '/' + config.name);
 
