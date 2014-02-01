@@ -1,6 +1,6 @@
 {
 	"name"        : "code-proxy",
-	"version"     : "1.1.2",
+	"version"     : "1.2.0",
 	"description" : "A debug tool to proxy js code execution from one browser to another.",
 	"main"        : "server/main.js",
 	"author"      : {
@@ -13,7 +13,8 @@
 	},
 	"license" : "GPL-3.0",
 	"dependencies": {
-		"ws": "0.4.x"
+		"ws"         : "0.4.x",
+		"node-static": "0.7.x"
 	},
 	"keywords": [
 		"call",

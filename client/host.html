@@ -1,15 +1,17 @@
 <!doctype html>
 <html>
 <head>
-	<title>server.a</title>
-	<script type="text/javascript" src="http://127.0.0.1:8800/client/host.js"></script>
+	<title>host</title>
+	<link rel="shortcut icon" href="favicon.ico">
+	<script type="text/javascript" src="host.js"></script>
+
 	<script type="text/javascript">
 		var proxy = new ProxyHost();
 
 		window.onload = function(){
 			document.body.innerHTML = document.title;
 
-			proxy.init({name:'/', host:'127.0.0.1'});
+			proxy.init({name:'/session/name'});
 		};
 	</script>
 </head>
