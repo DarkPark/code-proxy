@@ -1,5 +1,5 @@
 /**
- * STB Proxy server node.js part
+ * Proxy server node.js part
  * handles all requests between desktop browser (client) and server (stb device)
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
@@ -8,20 +8,17 @@
 'use strict';
 
 var ws     = require('ws'),
-	fs     = require('fs'),
 	http   = require('http'),
 	wsPool = require('./wspool'),
-	config = require('./config'),
-
-	// files allowed to be served
-	fileList = ['guest.js', 'host.js'];
+	config = require('./config');
 
 /**
  * Start HTTP and WebSocket servers
  * @param {Object} [options] ports to overwrite defaults
  */
 module.exports = function ( options ) {
-	var wss, name;
+	var file = new (require('node-static').Server)({cache:0}),
+		wss, name;
 
 	// validate and iterate input
 	if ( options ) {
@@ -56,24 +53,23 @@ module.exports = function ( options ) {
 			case 'GET':
 				// first param holds the command name
 				switch ( query[0] ) {
-					// serving files
+					// serving static files
 					case 'client':
-						// one of the allowed files
-						if ( fileList.indexOf(query[1]) !== -1 ) {
-							response.writeHead(200, {'Content-Type': 'application/javascript; charset=utf-8'});
-							response.end(fs.readFileSync(__dirname + '/../client/' + query[1]));
-						}
+						file.serve(request, response, function ( error ) {
+							if ( error ) {
+								console.log(error);
+								file.serveFile('client/index.html', 404, {}, request, response);
+							}
+						});
 						break;
 					// get connection info
 					case 'info':
-						response.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'});
+						response.writeHead(200, {
+							'Access-Control-Allow-Origin': '*',
+							'Content-Type': 'application/json; charset=utf-8'
+						});
 						response.end(JSON.stringify(wsPool.info(query[1])));
 						break;
-					// show help page
-					default:
-						// not valid url or root
-						response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-						response.end(fs.readFileSync(__dirname + '/../client/index.html'));
 				}
 				break;
 
@@ -82,7 +78,7 @@ module.exports = function ( options ) {
 				// allow cross-origin resource sharing
 				response.writeHead(204, {
 					'Access-Control-Allow-Origin' : '*',
-					'Access-Control-Allow-Methods': 'POST',
+					'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
 					'Access-Control-Allow-Headers': 'Content-Type',
 					'Access-Control-Max-Age'      : 100
 				});
@@ -98,10 +94,13 @@ module.exports = function ( options ) {
 					post += data;
 				});
 
-				// everything is ready to send to the STB
+				// everything is ready to send to host
 				request.on('end', function () {
 					// prepare
-					response.writeHead(200, {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json; charset=utf-8'});
+					response.writeHead(200, {
+						'Access-Control-Allow-Origin': '*',
+						'Content-Type': 'application/json; charset=utf-8'
+					});
 					// make a call
 					if ( !wsPool.send(query[0], post, response) ) {
 						// no available connections so close

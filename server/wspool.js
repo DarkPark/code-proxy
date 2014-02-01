@@ -93,7 +93,7 @@ module.exports = {
 	/**
 	 *
 	 * @param {String} name session name
-	 * @param {String} data post data from browser to STB server
+	 * @param {String} data post data from guest to host
 	 * @param {ServerResponse} response link to HTTP response object to send back data
 	 * @return {Boolean} true if was send successfully
 	 */
