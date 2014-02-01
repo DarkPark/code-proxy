@@ -1,5 +1,5 @@
 /**
- * STB Proxy desktop browser (client) part
+ * Guest client part
  * @constructor
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
@@ -37,7 +37,7 @@ function ProxyGuest () {
 	 * @param {Object} options set of initialization parameters (host, port, name)
 	 */
 	this.init = function ( options ) {
-		var name;
+		var name, info;
 
 		// validate and iterate input
 		if ( options ) {
@@ -48,19 +48,29 @@ function ProxyGuest () {
 		}
 
 		// there may be some special chars
-		config.name = encodeURIComponent(config.name);
+		name = encodeURIComponent(config.name);
 
 		// cache final request urls
-		urlPost = 'http://' + config.host + ':' + config.port + '/' + config.name;
-		urlInfo = 'http://' + config.host + ':' + config.port + '/info/' + config.name;
+		urlPost = 'http://' + config.host + ':' + config.port + '/' + name;
+		urlInfo = 'http://' + config.host + ':' + config.port + '/info/' + name;
+
+		// check connection status
+		info = this.info();
+		console.log('%c[core]\t%c%s\t%cconnection to the host %c(%s:%s): %c%s',
+			'color:grey',
+			'color:purple', config.name,
+			'color:black',
+			'color:grey', config.host, config.port,
+			'color:' + (info && info.active ? 'green' : 'red'), info && info.active ? 'available' : 'not available'
+		);
 	};
 
 	/**
-	 * Sends a sync request to the STB device from the desktop browser
-	 * @param {Object} data JSON data to send
-	 * @return {*} execution result from the STB
+	 * Sends a synchronous request to the host system
+	 * @param {Object} request JSON data to send
+	 * @return {*} execution result from the host
 	 */
-	this.send = function ( data ) {
+	this.send = function ( request ) {
 		// prepare
 		var time = +new Date(),
 			response;
@@ -73,7 +83,7 @@ function ProxyGuest () {
 		// make request
 		xhr.open('post', urlPost, false);
 		xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-		xhr.send(JSON.stringify(data));
+		xhr.send(JSON.stringify(request));
 
 		// proceed the result
 		try {
@@ -83,11 +93,13 @@ function ProxyGuest () {
 		}
 
 		// detailed report
-		console.groupCollapsed('%c[%s]\t%c%s\t%c(%d/%d ms)',
-			'color:#aaa;font-weight:normal', data.type,
-			'color:' + (response.error ? 'red' : 'green'), data.method || data.code || 'unhandled STB call',
-			'color:#aaa;font-weight:normal', response.time || 0, +new Date() - time);
-		if ( data.params    !== undefined ) { console.log('%c%s:\t', 'font-weight:bold', 'Params', data.params); }
+		console.groupCollapsed('%c[%s]\t%c%s\t%c%s\t%c%s',
+			'color:grey;font-weight:normal', request.type,
+			'color:purple;font-weight:normal', config.name,
+			'color:grey;font-weight:normal', +new Date() - time,
+			'color:' + (response.error ? 'red' : 'green'), request.method || request.code
+		);
+		if ( request.params !== undefined ) { console.log('%c%s:\t', 'font-weight:bold', 'Params', request.params); }
 		if ( response.data  !== undefined ) { console.log('%c%s:\t', 'font-weight:bold', 'Result', response.data); }
 		if ( response.error !== undefined ) { console.error(response.error); }
 		console.groupEnd();
@@ -97,22 +109,32 @@ function ProxyGuest () {
 	};
 
 	/**
-	 * Wrapper to send a line of js code to eval on the STB device
+	 * Wrapper to send a line of js code to eval on the host
 	 * @param {String} code javascript source code to execute on the device
-	 * @return {*} execution result from the STB
+	 * @return {*} execution result from the host
 	 */
 	this.eval = function ( code ) {
 		return this.send({type:'eval', code:code});
 	};
 
 	/**
-	 * Wrapper to send one function of js code with arguments to eval on the STB device
-	 * @param {String} method javascript function name (like "gSTB.Debug")
+	 * Wrapper to send one function of js code with arguments to eval on the host
+	 * @param {String} method javascript function name (like "encodeURIComponent")
 	 * @param {Array} params list of the function arguments
-	 * @return {*} execution result from the STB
+	 * @return {*} execution result from the host
 	 */
 	this.call = function ( method, params ) {
 		return this.send({type:'call', method:method, params:params});
+	};
+
+	/**
+	 * Wrapper to send a var name to get json
+	 * @param {String} name javascript var name to serialize
+	 * @return {*} execution result from the host
+	 */
+	this.json = function ( name ) {
+		var data = this.send({type:'json', code:name});
+		return data ? JSON.parse(data) : null;
 	};
 
 	/**

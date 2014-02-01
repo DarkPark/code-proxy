@@ -1,5 +1,5 @@
 /**
- * STB Proxy device (server) side
+ * Host client side
  * @constructor
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
@@ -28,7 +28,8 @@ function ProxyHost () {
 	 * @param {Object} options set of initialization parameters (host, port, name)
 	 */
 	this.init = function ( options ) {
-		var name;
+		var self = this,
+			name;
 
 		// validate and iterate input
 		if ( options ) {
@@ -39,53 +40,73 @@ function ProxyHost () {
 		}
 
 		// there may be some special chars
-		config.name = encodeURIComponent(config.name);
+		name = encodeURIComponent(config.name);
 
 		// establish the connection
-		config.socket = new WebSocket('ws://' + config.host + ':' + config.port + '/' + config.name);
+		config.socket = new WebSocket('ws://' + config.host + ':' + config.port + '/' + name);
 
 		// event hook
 		config.socket.onopen = function(){
-			console.log('socket.onopen', config.name);
+			self.log('core', 0, true, 'open connection');
 		};
 
 		// event hook
 		config.socket.onclose = function(){
-			console.log('socket.onclose', config.name);
+			self.log('core', 0, true, 'close connection');
 		};
 
 		// message from a desktop browser
 		config.socket.onmessage = function ( message ) {
 			// prepare
-			var result = {time:+new Date()},
+			var response = {time:+new Date()},
 				request;
-
-			console.log('socket.onmessage', config.name);
 
 			// proceed the message
 			try {
 				request = JSON.parse(message.data || false);
-				// valid incoming request
-				if ( request && ['call', 'eval'].indexOf(request.type) !== -1 ) {
-					// exec types
-					if ( request.type === 'call' ) {
-						result.data = eval(request.method).apply(window, request.params);
-					} else if ( request.type === 'eval' ) {
-						result.data = eval(request.code);
-					}
-				} else {
-					result.error = 'invalid incoming request';
+				switch ( request.type ) {
+					case 'call':
+						response.data = eval(request.method).apply(window, request.params);
+						break;
+					case 'eval':
+						response.data = eval(request.code);
+						break;
+					case 'json':
+						response.data = JSON.stringify(eval(request.code));
+						break;
+					default:
+						response.error = 'invalid incoming request';
 				}
 			} catch ( e ) {
-				console.log(e);
-				result.error = e;
+				response.error = e.toString();
 			}
 
 			// time taken
-			result.time = +new Date() - result.time;
+			response.time = +new Date() - response.time;
 			// wrap and send back
-			config.socket.send(JSON.stringify(result));
+			config.socket.send(JSON.stringify(response));
+
+			// detailed report
+			self.log(request.type, response.time, !response.error, request.method || request.code, request.params);
 		};
+	};
+
+	/**
+	 * Logging wrapper
+	 * @param {String} type
+	 * @param {Number} time
+	 * @param {Boolean} status
+	 * @param {String} message
+	 * @param {*} [params]
+	 */
+	this.log = function ( type, time, status, message, params ) {
+		console.log('%c[%s]\t%c%s\t%c%s\t%c%s\t',
+			'color:grey', type,
+			'color:purple', config.name,
+			'color:grey', time,
+			'color:' + (status ? 'green' : 'red'), message,
+			params || ''
+		);
 	};
 
 	/**
