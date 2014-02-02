@@ -1,10 +1,12 @@
 A [Node.js](http://nodejs.org) tools that gives the ability to execute JavaScript code in one client browser and get the results in another.
 
-## Installation and use
+## Installation
 
 `npm install code-proxy`
 
-Standalone server:
+## Use
+
+Start as a standalone server:
 
 `node server/main.js`
 
@@ -22,9 +24,9 @@ require('code-proxy')({
 });
 ```
 
-## Examples
+## Client-side examples
 
-Host browser:
+Host browser (accepts requests, execute them and send back result of execution):
 
 ```html
 <script type="text/javascript" src="host.js"></script>
@@ -36,7 +38,7 @@ var proxy = new ProxyHost();
 proxy.init();
 ```
 
-Guest browser:
+Guest browser (send requests to the host):
 
 ```html
 <script type="text/javascript" src="guest.js"></script>
@@ -52,4 +54,14 @@ proxy.eval('1+1');
 proxy.eval('window.navigator.userAgent');
 proxy.json('screen');
 proxy.call('localStorage.getItem', ['test'], 'localStorage');
+```
+
+Proxy server host/port and session name can be redefined on both host and guest:
+
+```javascript
+proxy.init({
+	host : '127.0.0.1',
+	port : 8800,
+	name : 'anonymous'
+});
 ```
