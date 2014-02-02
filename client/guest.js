@@ -34,7 +34,7 @@ function ProxyGuest () {
 
 	/**
 	 * Prepares the connection
-	 * @param {Object} options set of initialization parameters (host, port, name)
+	 * @param {Object} [options] set of initialization parameters (host, port, name)
 	 */
 	this.init = function ( options ) {
 		var name, info;
@@ -56,9 +56,10 @@ function ProxyGuest () {
 
 		// check connection status
 		info = this.info();
-		console.log('%c[core]\t%c%s\t%cconnection to the host %c(%s:%s): %c%s',
+		console.log('%c[core]\t%c%s\t%c0\t%cconnection to the host %c(%s:%s): %c%s',
 			'color:grey',
 			'color:purple', config.name,
+			'color:grey',
 			'color:black',
 			'color:grey', config.host, config.port,
 			'color:' + (info && info.active ? 'green' : 'red'), info && info.active ? 'available' : 'not available'

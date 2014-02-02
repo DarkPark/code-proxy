@@ -25,7 +25,7 @@ function ProxyHost () {
 
 	/**
 	 * Prepares the connection
-	 * @param {Object} options set of initialization parameters (host, port, name)
+	 * @param {Object} [options] set of initialization parameters (host, port, name)
 	 */
 	this.init = function ( options ) {
 		var self = this,
