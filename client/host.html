@@ -7,15 +7,14 @@
 
 	<script type="text/javascript">
 		var proxy = new ProxyHost();
+		// default host/port/session
+		proxy.init();
 
-		window.onload = function(){
-			document.body.innerHTML = document.title;
-
-			proxy.init();
-		};
+		// prepare for guest call
+		localStorage.setItem('test', 'localStorage test string on the host');
 	</script>
 </head>
 <body>
-
+	HOST
 </body>
 </html>

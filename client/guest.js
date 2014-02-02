@@ -37,7 +37,7 @@ function ProxyGuest () {
 	 * @param {Object} [options] set of initialization parameters (host, port, name)
 	 */
 	this.init = function ( options ) {
-		var name, info;
+		var name, info, active;
 
 		// validate and iterate input
 		if ( options ) {
@@ -54,16 +54,20 @@ function ProxyGuest () {
 		urlPost = 'http://' + config.host + ':' + config.port + '/' + name;
 		urlInfo = 'http://' + config.host + ':' + config.port + '/info/' + name;
 
-		// check connection status
 		info = this.info();
+		// check connection status
+		active = info && info.active;
+
 		console.log('%c[core]\t%c%s\t%c0\t%cconnection to the host %c(%s:%s): %c%s',
 			'color:grey',
 			'color:purple', config.name,
 			'color:grey',
 			'color:black',
 			'color:grey', config.host, config.port,
-			'color:' + (info && info.active ? 'green' : 'red'), info && info.active ? 'available' : 'not available'
+			'color:' + (active ? 'green' : 'red'), active ? 'available' : 'not available'
 		);
+
+		return active;
 	};
 
 	/**
@@ -122,10 +126,11 @@ function ProxyGuest () {
 	 * Wrapper to send one function of js code with arguments to eval on the host
 	 * @param {String} method javascript function name (like "encodeURIComponent")
 	 * @param {Array} params list of the function arguments
+	 * @param {String} [context=window] remote call context
 	 * @return {*} execution result from the host
 	 */
-	this.call = function ( method, params ) {
-		return this.send({type:'call', method:method, params:params});
+	this.call = function ( method, params, context ) {
+		return this.send({type:'call', method:method, params:params, context:context});
 	};
 
 	/**

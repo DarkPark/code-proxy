@@ -59,14 +59,15 @@ function ProxyHost () {
 		config.socket.onmessage = function ( message ) {
 			// prepare
 			var response = {time:+new Date()},
-				request;
+				request, context;
 
 			// proceed the message
 			try {
 				request = JSON.parse(message.data || false);
 				switch ( request.type ) {
 					case 'call':
-						response.data = eval(request.method).apply(window, request.params);
+						context = request.context ? eval(request.context) : window;
+						response.data = eval(request.method).apply(context, request.params);
 						break;
 					case 'eval':
 						response.data = eval(request.code);
