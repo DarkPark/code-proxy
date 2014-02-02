@@ -10,14 +10,15 @@
 var ws     = require('ws'),
 	http   = require('http'),
 	wsPool = require('./wspool'),
-	config = require('./config');
+	config = require('./config'),
+	log    = require('./logger').http;
 
 /**
  * Start HTTP and WebSocket servers
  * @param {Object} [options] ports to overwrite defaults
  */
 module.exports = function ( options ) {
-	var file = new (require('node-static').Server)({cache:0}),
+	var file = new (require('node-static').Server)(),
 		wss, name;
 
 	// validate and iterate input
@@ -45,7 +46,7 @@ module.exports = function ( options ) {
 		// prepare request query
 		var post, query = request.url.slice(1).split('/');
 
-		console.log('http\t%s\t%s', request.method, request.url);
+		log('http', request.method, request.url);
 
 		switch ( request.method ) {
 

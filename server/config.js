@@ -8,5 +8,6 @@
 
 module.exports = {
 	portHttp : 8800,
-	portWs   : 8900
+	portWs   : 8900,
+	logging  : true
 };

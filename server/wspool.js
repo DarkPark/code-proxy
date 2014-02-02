@@ -7,8 +7,9 @@
 
 'use strict';
 
-// named WebSocket list
-var pool = {};
+var log = require('./logger').ws,
+	// named WebSocket list
+	pool = {};
 
 // exports the wrapper object
 module.exports = {
@@ -24,7 +25,7 @@ module.exports = {
 
 		// check input
 		if ( name && socket ) {
-			console.log('ws\tINIT\t[%s]\tconnection', name);
+			log('ws', 'init', name, 'connection');
 
 			// main data structure
 			pool[name] = {
@@ -43,7 +44,7 @@ module.exports = {
 			pool[name].socket.on('message', function(message) {
 				// has link to talk back
 				if ( pool[name].response ) {
-					console.log('ws\tGET\t[%s]\tmessage\t%s', name, message);
+					log('ws', 'get', name, message);
 					pool[name].response.end(message);
 				}
 			});
@@ -51,7 +52,7 @@ module.exports = {
 		}
 
 		// failure
-		console.log('ws\tINIT\t[%s]\tfail to connect (wrong name or link)', name);
+		log('ws', 'init', name, 'fail to connect (wrong name or link)');
 		return false;
 	},
 
@@ -63,12 +64,12 @@ module.exports = {
 	remove : function ( name ) {
 		// valid connection
 		if ( name in pool ) {
-			console.log('ws\tEXIT\t[%s]\tclose', name);
+			log('ws', 'exit', name, 'close');
 			return delete pool[name];
 		}
 
 		// failure
-		console.log('ws\tDEL\t[%s]\tfail to remove (invalid connection)', name);
+		log('ws', 'del', name, 'fail to remove (invalid connection)');
 		return false;
 	},
 
@@ -100,7 +101,7 @@ module.exports = {
 	send : function ( name, data, response ) {
 		// valid connection
 		if ( name in pool && pool[name].active ) {
-			console.log('ws\tSEND\t[%s]\tmessage\t%s', name, data);
+			log('ws', 'send', name, data);
 			// store link to talk back when ready
 			pool[name].response = response;
 			// actual post
@@ -110,7 +111,7 @@ module.exports = {
 		}
 
 		// failure
-		console.log('ws\tSEND\t[%s]\tfail to send (invalid connection)', name);
+		log('ws', 'send', name, 'fail to send (invalid connection)');
 		return false;
 	}
 
