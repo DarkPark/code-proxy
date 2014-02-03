@@ -24,9 +24,9 @@ require('code-proxy')({
 });
 ```
 
-## Client-side examples
+## Examples
 
-Host browser (accepts requests, execute them and send back result of execution):
+[Host client](http://127.0.0.1:8800/client/host.html) (accepts requests, execute them and send back result of execution):
 
 ```html
 <script type="text/javascript" src="host.js"></script>
@@ -38,7 +38,7 @@ var proxy = new ProxyHost();
 proxy.init();
 ```
 
-Guest browser (send requests to the host):
+[Guest client](http://127.0.0.1:8800/client/guest.html) (send requests to the host):
 
 ```html
 <script type="text/javascript" src="guest.js"></script>

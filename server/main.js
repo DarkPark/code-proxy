@@ -18,7 +18,8 @@ var ws     = require('ws'),
  * @param {Object} [options] ports to overwrite defaults
  */
 module.exports = function ( options ) {
-	var file = new (require('node-static').Server)(),
+	// absolute path is necessary for external projects
+	var file = new (require('node-static').Server)(__dirname + '/../'),
 		wss, name;
 
 	// validate and iterate input
