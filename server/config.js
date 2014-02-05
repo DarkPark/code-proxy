@@ -7,7 +7,9 @@
 'use strict';
 
 module.exports = {
-	portHttp : 8800,
-	portWs   : 8900,
-	logging  : true
+	portHttp   : 8800,
+	portWs     : 8900,
+	retryDelay : 100,
+	retryLimit : 30,
+	logging    : true
 };

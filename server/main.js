@@ -98,15 +98,38 @@ module.exports = function ( options ) {
 
 				// everything is ready to send to host
 				request.on('end', function () {
+					var counter = 0,
+						timerId;
+
 					// prepare
 					response.writeHead(200, {
 						'Access-Control-Allow-Origin': '*',
 						'Content-Type': 'application/json; charset=utf-8'
 					});
-					// make a call
-					if ( !wsPool.send(query[0], post, response) ) {
-						// no available connections so close
-						response.end(JSON.stringify({error: 'no connections'}));
+
+					// check connection
+					if ( wsPool.info(query[0]).active ) {
+						// ok - sending
+						wsPool.send(query[0], post, response);
+					} else {
+						// no connection - waiting
+						timerId = setInterval(function () {
+							if ( counter < config.retryLimit ) {
+								// check connection
+								if ( wsPool.info(query[0]).active ) {
+									// ok - sending
+									wsPool.send(query[0], post, response);
+									// stop retrying
+									clearInterval(timerId);
+								}
+								counter++;
+							} else {
+								// no available connections so close
+								response.end(JSON.stringify({error: 'no connections'}));
+								// stop retrying
+								clearInterval(timerId);
+							}
+						}, config.retryDelay);
 					}
 				});
 				break;

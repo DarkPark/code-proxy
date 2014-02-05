@@ -20,12 +20,14 @@ Connect to an existing project:
 ```javascript
 require('code-proxy')();
 
-// or it's possible to redefine some options
+// or it's possible to redefine default options
 
 require('code-proxy')({
-	portHttp : 8800,
-	portWs   : 8900,
-	logging  : true
+	portHttp   : 8800,
+	portWs     : 8900,
+	retryDelay : 100,
+	retryLimit : 30,
+	logging    : true
 });
 ```
 

@@ -92,27 +92,18 @@ module.exports = {
 	},
 
 	/**
-	 *
+	 * Forward the request to the given session
 	 * @param {String} name session name
 	 * @param {String} data post data from guest to host
 	 * @param {ServerResponse} response link to HTTP response object to send back data
-	 * @return {Boolean} true if was send successfully
 	 */
 	send : function ( name, data, response ) {
-		// valid connection
-		if ( name in pool && pool[name].active ) {
-			log('ws', 'send', name, data);
-			// store link to talk back when ready
-			pool[name].response = response;
-			// actual post
-			pool[name].socket.send(data);
-			pool[name].count++;
-			return true;
-		}
-
-		// failure
-		log('ws', 'send', name, 'fail to send (invalid connection)');
-		return false;
+		log('ws', 'send', name, data);
+		// store link to talk back when ready
+		pool[name].response = response;
+		// actual post
+		pool[name].socket.send(data);
+		pool[name].count++;
 	}
 
 };
