@@ -1,4 +1,6 @@
-A [Node.js](http://nodejs.org) tools that gives the ability to execute JavaScript code in one client browser and get the results in another.
+A [Node.js](http://nodejs.org) tools that give the ability to execute JavaScript code in one client browser and to get the results in another.
+Based on HTTP (for static files and sync post requests) and WebSocket (for server-host communications) technologies.
+Supports [CommonJS](http://www.commonjs.org/) modules and can be used with [Browserify](http://browserify.org/) on the client-side.
 
 Scheme to illustrate base working principles:
 ![scheme](https://raw.github.com/DarkPark/code-proxy/master/client/scheme.png)

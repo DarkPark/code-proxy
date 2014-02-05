@@ -1,13 +1,15 @@
 /**
  * Host client side
- * @constructor
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
  */
+
+'use strict';
+
+/**
+ * @constructor
+ */
 function ProxyHost () {
-
-	'use strict';
-
 	/**
 	 * proxy instance configuration
 	 * @namespace
@@ -116,4 +118,10 @@ function ProxyHost () {
 	this.close = function () {
 		config.socket.close();
 	};
+}
+
+
+// CommonJS modules support
+if ( typeof module !== 'undefined' && module.exports ) {
+	module.exports = ProxyHost;
 }

@@ -1,13 +1,15 @@
 /**
  * Guest client part
- * @constructor
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
  */
+
+'use strict';
+
+/**
+ * @constructor
+ */
 function ProxyGuest () {
-
-	'use strict';
-
 	/**
 	 * proxy instance configuration
 	 * @namespace
@@ -159,4 +161,10 @@ function ProxyGuest () {
 
 		return JSON.parse(xhr.responseText || false);
 	};
+}
+
+
+// CommonJS modules support
+if ( typeof module !== 'undefined' && module.exports ) {
+	module.exports = ProxyGuest;
 }

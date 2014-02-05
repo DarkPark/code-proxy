@@ -20,6 +20,7 @@
 	"browser"     : true,
 	"evil"        : true,
 	"globals"     : {
-		"console": false
+		"console": false,
+		"module":  false
 	}
 }
