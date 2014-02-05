@@ -1,6 +1,6 @@
 A [Node.js](http://nodejs.org) tools that gives the ability to execute JavaScript code in one client browser and get the results in another.
 
-Scheme to illustrate base principles of working:
+Scheme to illustrate base working principles:
 ![scheme](https://raw.github.com/DarkPark/code-proxy/master/client/scheme.png)
 
 ## Installation
