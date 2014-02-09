@@ -127,6 +127,16 @@ ProxyHost.prototype.connect = function () {
 
 
 /**
+ * Finish the connection and strop reconnection if any
+ */
+ProxyHost.prototype.disconnect = function () {
+	// stop auto connection
+	this.config.reconnect = false;
+	this.socket.close();
+};
+
+
+/**
  * Logging wrapper
  * @param {String} type
  * @param {Number} time
@@ -142,14 +152,6 @@ ProxyHost.prototype.log = function ( type, time, status, message, params ) {
 		'color:' + (status ? 'green' : 'red'), message,
 		params || ''
 	);
-};
-
-
-/**
- * Finish the connection
- */
-ProxyHost.prototype.close = function () {
-	this.socket.close();
 };
 
 
