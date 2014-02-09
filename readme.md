@@ -40,9 +40,16 @@ require('code-proxy')({
 ```
 
 ```javascript
-var proxy = new ProxyHost();
 // default host/port/session
-proxy.init();
+var proxy = new ProxyHost();
+
+// prepare for guest call
+localStorage.setItem('test', 'localStorage test string on the host');
+
+// test func for remote exec
+function doSomething ( param ) {
+	return 'some host work with "' + param + '" is done';
+}
 ```
 
 [Guest client](http://127.0.0.1:8800/client/guest.html) (send requests to the host):
@@ -52,21 +59,21 @@ proxy.init();
 ```
 
 ```javascript
-var proxy = new ProxyGuest();
 // default host/port/session
-proxy.init();
+var proxy = new ProxyGuest();
 
 // examples
 proxy.eval('1+1');
 proxy.eval('window.navigator.userAgent');
 proxy.json('screen');
 proxy.call('localStorage.getItem', ['test'], 'localStorage');
+proxy.call('doSomething', ['test data']);
 ```
 
 Proxy server host/port and session name can be redefined on both host and guest:
 
 ```javascript
-proxy.init({
+var proxy = new ProxyGuest({
 	host : '127.0.0.1',
 	port : 8800,
 	name : 'anonymous'

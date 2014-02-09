@@ -1,5 +1,5 @@
 /**
- * Host client side
+ * Client-side host part
  * @license GNU GENERAL PUBLIC LICENSE Version 3
  * @author DarkPark
  */
@@ -8,17 +8,22 @@
 
 /**
  * @constructor
+ * @param {Object} [options] set of initialization parameters (host, port, name)
  */
-function ProxyHost () {
+function ProxyHost ( options ) {
+	// prepare
+	var self = this,
+		name;
+
 	/**
 	 * proxy instance configuration
 	 * @namespace
 	 */
-	var config = {
-		/** node.js server address */
+	this.config = {
+		/** proxy server address */
 		host : '127.0.0.1',
 
-		/** websocket server port */
+		/** proxy server websocket port */
 		port : 8900,
 
 		/** session name */
@@ -26,99 +31,104 @@ function ProxyHost () {
 	};
 
 	/**
-	 * Prepares the connection
-	 * @param {Object} [options] set of initialization parameters (host, port, name)
+	 * @type {WebSocket}
 	 */
-	this.init = function ( options ) {
-		var self = this,
-			name;
+	this.socket = null;
 
-		// validate and iterate input
-		if ( options ) {
-			for ( name in options ) {
-				// rewrite defaults
-				if ( options.hasOwnProperty(name) ) { config[name] = options[name]; }
+	// validate and iterate input
+	if ( options && typeof options === 'object' ) {
+		for ( name in options ) {
+			// rewrite defaults
+			if ( options.hasOwnProperty(name) ) { this.config[name] = options[name]; }
+		}
+	}
+
+	// establish the connection
+	// there may be some special chars in name
+	this.socket = new WebSocket('ws://' + this.config.host + ':' + this.config.port + '/' + encodeURIComponent(this.config.name));
+
+	/**
+	 * event hook
+	 * @callback
+	 */
+	this.socket.onopen = function(){
+		self.log('core', 0, true, 'open connection');
+	};
+
+	/**
+	 * event hook
+	 * @callback
+	 */
+	this.socket.onclose = function(){
+		self.log('core', 0, true, 'close connection');
+	};
+
+	/**
+	 * message from a desktop browser
+	 * @callback
+	 */
+	this.socket.onmessage = function ( message ) {
+		// prepare
+		var response = {time:+new Date()},
+			request, context;
+
+		// proceed the message
+		try {
+			request = JSON.parse(message.data || false);
+			switch ( request.type ) {
+				case 'call':
+					context = request.context ? eval(request.context) : window;
+					response.data = eval(request.method).apply(context, request.params);
+					break;
+				case 'eval':
+					response.data = eval(request.code);
+					break;
+				case 'json':
+					response.data = JSON.stringify(eval(request.code));
+					break;
+				default:
+					response.error = 'invalid incoming request';
 			}
+		} catch ( e ) {
+			response.error = e.toString();
 		}
 
-		// there may be some special chars
-		name = encodeURIComponent(config.name);
+		// time taken
+		response.time = +new Date() - response.time;
+		// wrap and send back
+		this.send(JSON.stringify(response));
 
-		// establish the connection
-		config.socket = new WebSocket('ws://' + config.host + ':' + config.port + '/' + name);
-
-		// event hook
-		config.socket.onopen = function(){
-			self.log('core', 0, true, 'open connection');
-		};
-
-		// event hook
-		config.socket.onclose = function(){
-			self.log('core', 0, true, 'close connection');
-		};
-
-		// message from a desktop browser
-		config.socket.onmessage = function ( message ) {
-			// prepare
-			var response = {time:+new Date()},
-				request, context;
-
-			// proceed the message
-			try {
-				request = JSON.parse(message.data || false);
-				switch ( request.type ) {
-					case 'call':
-						context = request.context ? eval(request.context) : window;
-						response.data = eval(request.method).apply(context, request.params);
-						break;
-					case 'eval':
-						response.data = eval(request.code);
-						break;
-					case 'json':
-						response.data = JSON.stringify(eval(request.code));
-						break;
-					default:
-						response.error = 'invalid incoming request';
-				}
-			} catch ( e ) {
-				response.error = e.toString();
-			}
-
-			// time taken
-			response.time = +new Date() - response.time;
-			// wrap and send back
-			config.socket.send(JSON.stringify(response));
-
-			// detailed report
-			self.log(request.type, response.time, !response.error, request.method || request.code, request.params);
-		};
-	};
-
-	/**
-	 * Logging wrapper
-	 * @param {String} type
-	 * @param {Number} time
-	 * @param {Boolean} status
-	 * @param {String} message
-	 * @param {*} [params]
-	 */
-	this.log = function ( type, time, status, message, params ) {
-		console.log('%c[%s]\t%c%s\t%c%s\t%c%s\t',
-			'color:grey', type,
-			'color:purple', config.name,
-			'color:grey', time,
-			'color:' + (status ? 'green' : 'red'), message,
-			params || ''
-		);
-	};
-
-	/**
-	 * Finish the connection
-	 */
-	this.close = function () {
-		config.socket.close();
+		// detailed report
+		self.log(request.type, response.time, !response.error, request.method || request.code, request.params);
 	};
 }
+
+
+/**
+ * Logging wrapper
+ * @param {String} type
+ * @param {Number} time
+ * @param {Boolean} status
+ * @param {String} message
+ * @param {*} [params]
+ */
+ProxyHost.prototype.log = function ( type, time, status, message, params ) {
+	console.log('%c[%s]\t%c%s\t%c%s\t%c%s\t',
+		'color:grey', type,
+		'color:purple', this.config.name,
+		'color:grey', time,
+		'color:' + (status ? 'green' : 'red'), message,
+		params || ''
+	);
+};
+
+
+/**
+ * Finish the connection
+ */
+ProxyHost.prototype.close = function () {
+	this.socket.close();
+};
 
 
 // CommonJS modules support

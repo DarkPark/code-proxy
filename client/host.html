@@ -6,12 +6,16 @@
 	<script type="text/javascript" src="host.js"></script>
 
 	<script type="text/javascript">
-		var proxy = new ProxyHost();
 		// default host/port/session
-		proxy.init();
+		var proxy = new ProxyHost();
 
 		// prepare for guest call
 		localStorage.setItem('test', 'localStorage test string on the host');
+
+		// test func for remote exec
+		function doSomething ( param ) {
+			return 'some host work with "' + param + '" is done';
+		}
 	</script>
 </head>
 <body>

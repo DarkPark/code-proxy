@@ -6,15 +6,15 @@
 	<script type="text/javascript" src="guest.js"></script>
 
 	<script type="text/javascript">
-		var proxy = new ProxyGuest();
 		// default host/port/session
-		proxy.init();
+		var proxy = new ProxyGuest();
 
 		// examples
 		proxy.eval('1+1');
 		proxy.eval('window.navigator.userAgent');
 		proxy.json('screen');
 		proxy.call('localStorage.getItem', ['test'], 'localStorage');
+		proxy.call('doSomething', ['test data']);
 	</script>
 </head>
 <body>
