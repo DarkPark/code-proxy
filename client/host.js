@@ -12,8 +12,7 @@
  */
 function ProxyHost ( options ) {
 	// prepare
-	var self = this,
-		name;
+	var name;
 
 	/**
 	 * proxy instance configuration
@@ -27,7 +26,13 @@ function ProxyHost ( options ) {
 		port : 8900,
 
 		/** session name */
-		name : 'anonymous'
+		name : 'anonymous',
+
+		/** automatically try to restore connection on disconnect */
+		reconnect : true,
+
+		/** time between connection attempts (5s) */
+		reconnectInterval : 5000
 	};
 
 	/**
@@ -43,6 +48,18 @@ function ProxyHost ( options ) {
 		}
 	}
 
+	// try to establish connection
+	this.connect();
+}
+
+
+/**
+ * Connect to the proxy server
+ */
+ProxyHost.prototype.connect = function () {
+	// prepare
+	var self = this;
+
 	// establish the connection
 	// there may be some special chars in name
 	this.socket = new WebSocket('ws://' + this.config.host + ':' + this.config.port + '/' + encodeURIComponent(this.config.name));
@@ -52,7 +69,7 @@ function ProxyHost ( options ) {
 	 * @callback
 	 */
 	this.socket.onopen = function(){
-		self.log('core', 0, true, 'open connection');
+		self.log('core', 0, true, 'connection established');
 	};
 
 	/**
@@ -60,7 +77,12 @@ function ProxyHost ( options ) {
 	 * @callback
 	 */
 	this.socket.onclose = function(){
-		self.log('core', 0, true, 'close connection');
+		self.log('core', 0, false, 'no connection');
+		if ( self.config.reconnect ) {
+			setTimeout(function () {
+				self.connect();
+			}, self.config.reconnectInterval);
+		}
 	};
 
 	/**
@@ -101,7 +123,7 @@ function ProxyHost ( options ) {
 		// detailed report
 		self.log(request.type, response.time, !response.error, request.method || request.code, request.params);
 	};
-}
+};
 
 
 /**

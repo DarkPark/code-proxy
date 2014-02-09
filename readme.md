@@ -79,3 +79,5 @@ var proxy = new ProxyGuest({
 	name : 'anonymous'
 });
 ```
+
+ProxyHost has some additional options: `reconnect` and `reconnectInterval` to automatically try to restore connection on disconnect every 5 seconds. It's active be default.

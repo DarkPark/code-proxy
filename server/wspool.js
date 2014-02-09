@@ -30,7 +30,7 @@ module.exports = {
 			// main data structure
 			pool[name] = {
 				socket : socket,
-				time   : Math.round(+new Date()/1000),
+				time   : +new Date(),
 				count  : 0,
 				active : true
 			};
