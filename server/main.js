@@ -39,7 +39,9 @@ module.exports = function ( options ) {
 	});
 	// report
 	wss.on('listening', function () {
-		console.log('Proxy server port: %s (WebSocket)', config.portWs);
+		if ( config.logging ) {
+			console.log('Proxy server port: %s (WebSocket)', config.portWs);
+		}
 	});
 
 	// simple http listener
@@ -139,7 +141,9 @@ module.exports = function ( options ) {
 		}
 
 	}).listen(config.portHttp).on('listening', function () {
-		console.log('Proxy server port: %s (HTTP)', config.portHttp);
+		if ( config.logging ) {
+			console.log('Proxy server port: %s (HTTP)', config.portHttp);
+		}
 	});
 };
 
