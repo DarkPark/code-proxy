@@ -8,12 +8,6 @@
 
 module.exports = {
 	/**
-	 * Enables proxy server
-	 * @type {boolean}
-	 */
-	active: true,
-
-	/**
 	 * Listening HTTP port to serve proxy files
 	 * @type {number}
 	 */
@@ -41,5 +35,5 @@ module.exports = {
 	 * Full logging
 	 * @type {boolean}
 	 */
-	logging: false
+	logging: true
 };
