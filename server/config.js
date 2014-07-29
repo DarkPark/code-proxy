@@ -35,5 +35,11 @@ module.exports = {
 	 * Full logging
 	 * @type {boolean}
 	 */
-	logging: true
+	logging: true,
+
+	/**
+	 * Session name
+	 * @type {string}
+	 */
+	name : 'anonymous'
 };
