@@ -11,6 +11,7 @@ var log = require('./logger').ws,
 	// named WebSocket list
 	pool = {};
 
+
 // exports the wrapper object
 module.exports = {
 

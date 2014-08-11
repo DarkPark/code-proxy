@@ -80,4 +80,6 @@ var proxy = new ProxyGuest({
 });
 ```
 
+Both host and guest proxy instance have `active` boolean flag to determine the current connection to the proxy server status.
+
 ProxyHost has some additional options: `reconnect` and `reconnectInterval` to automatically try to restore connection on disconnect every 5 seconds. It's active be default.

@@ -10,6 +10,7 @@ require('tinycolor');
 
 var config = require('./config');
 
+
 /**
  * Output detailed log for HTTP communications
  * @param {String} type
@@ -24,6 +25,7 @@ module.exports.http = function ( type, method, name, message ) {
 		);
 	}
 };
+
 
 /**
  * Output detailed log for HTTP communications

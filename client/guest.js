@@ -12,7 +12,10 @@
  */
 function ProxyGuest ( options ) {
 	// prepare
-	var name, info, active;
+	var name;
+
+    // connection with server
+    this.active = false;
 
 	/**
 	 * proxy instance configuration
@@ -28,10 +31,16 @@ function ProxyGuest ( options ) {
 		/** session name */
 		name : 'anonymous',
 
-		/** cached url for posting requests */
+        /**
+         * cached url for posting requests
+         * @type {string}
+         */
 		urlPost : null,
 
-		/** cached url for info collecting */
+        /**
+         * cached url for info collecting
+         * @type {string}
+         */
 		urlInfo : null
 	};
 
@@ -53,9 +62,8 @@ function ProxyGuest ( options ) {
 	this.config.urlPost = 'http://' + this.config.host + ':' + this.config.port + '/' + name;
 	this.config.urlInfo = 'http://' + this.config.host + ':' + this.config.port + '/info/' + name;
 
-	info = this.info();
-	// check connection status
-	active = info && info.active;
+	// check initial connection status
+    this.active = this.info().active;
 
 	console.log('%c[core]\t%c%s\t%c0\t%cconnection to the host %c(%s:%s): %c%s',
 		'color:grey',
@@ -63,10 +71,8 @@ function ProxyGuest ( options ) {
 		'color:grey',
 		'color:black',
 		'color:grey', this.config.host, this.config.port,
-		'color:' + (active ? 'green' : 'red'), active ? 'available' : 'not available'
+		'color:' + (this.active ? 'green' : 'red'), this.active ? 'available' : 'not available'
 	);
-
-	return active;
 }
 
 
@@ -96,6 +102,9 @@ ProxyGuest.prototype.send = function ( request ) {
 	} catch ( e ) {
 		response = {error:e};
 	}
+
+    // update connection status
+    this.active = !response.error;
 
 	// detailed report
 	console.groupCollapsed('%c[%s]\t%c%s\t%c%s\t%c%s',
@@ -143,6 +152,7 @@ ProxyGuest.prototype.call = function ( method, params, context ) {
  */
 ProxyGuest.prototype.json = function ( name ) {
 	var data = this.send({type:'json', code:name});
+
 	return data ? JSON.parse(data) : null;
 };
 
