@@ -6,9 +6,11 @@
 
 'use strict';
 
-require('tinycolor');
-
 var config = require('./config');
+
+
+// enable colors in console
+require('tty-colors');
 
 
 /**
