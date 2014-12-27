@@ -1,13 +1,15 @@
 /**
- * Client-side host part
- * @license GNU GENERAL PUBLIC LICENSE Version 3
+ * Client-side host part.
+ *
  * @author DarkPark
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
  */
 
 'use strict';
 
 /**
  * @constructor
+ *
  * @param {Object} [options] set of initialization parameters (host, port, name)
  */
 function ProxyHost ( options ) {
@@ -94,7 +96,8 @@ ProxyHost.prototype.connect = function () {
 	};
 
 	/**
-	 * message from a desktop browser
+	 * Message from a desktop browser.
+	 *
 	 * @callback
 	 */
 	this.socket.onmessage = function ( message ) {
@@ -135,7 +138,7 @@ ProxyHost.prototype.connect = function () {
 
 
 /**
- * Finish the connection and strop reconnection if any
+ * Finish the connection and strop reconnection if any.
  */
 ProxyHost.prototype.disconnect = function () {
 	// stop auto connection
@@ -145,7 +148,8 @@ ProxyHost.prototype.disconnect = function () {
 
 
 /**
- * Logging wrapper
+ * Logging wrapper.
+ *
  * @param {String} type
  * @param {Number} time
  * @param {Boolean} status

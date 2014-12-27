@@ -1,7 +1,8 @@
 /**
- * Console logger for http/ws communication
- * @license GNU GENERAL PUBLIC LICENSE Version 3
+ * Console logger for http/ws communication.
+ *
  * @author DarkPark
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
  */
 
 'use strict';
@@ -14,7 +15,8 @@ require('tty-colors');
 
 
 /**
- * Output detailed log for HTTP communications
+ * Output detailed log for HTTP communications.
+ *
  * @param {String} type
  * @param {String} method
  * @param {String} name
@@ -30,7 +32,8 @@ module.exports.http = function ( type, method, name, message ) {
 
 
 /**
- * Output detailed log for HTTP communications
+ * Output detailed log for HTTP communications.
+ *
  * @param {String} type
  * @param {String} method
  * @param {String} name

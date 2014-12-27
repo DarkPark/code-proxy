@@ -1,26 +1,29 @@
 /**
- * Proxy server node.js part
- * handles all requests between desktop browser (client) and server (stb device)
- * @license GNU GENERAL PUBLIC LICENSE Version 3
+ * Proxy server node.js part.
+ * Handles all requests between desktop browser (client) and server (stb device).
+ *
  * @author DarkPark
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
  */
 
 'use strict';
 
-var ws     = require('ws'),
+var path   = require('path'),
 	http   = require('http'),
+	ws     = require('ws'),
 	wsPool = require('./wspool'),
 	config = require('./config'),
 	log    = require('./logger').http;
 
 
 /**
- * Start HTTP and WebSocket servers
+ * Start HTTP and WebSocket servers.
+ *
  * @param {Object} [options] ports to overwrite defaults
  */
 module.exports = function ( options ) {
 	// absolute path is necessary for external projects
-	var file = new (require('node-static').Server)(__dirname + '/../'),
+	var file = new (require('node-static').Server)(path.join(__dirname, '..')),
 		wss, name;
 
 	// validate and iterate input
@@ -82,10 +85,10 @@ module.exports = function ( options ) {
 			case 'OPTIONS':
 				// allow cross-origin resource sharing
 				response.writeHead(204, {
-					'Access-Control-Allow-Origin' : '*',
+					'Access-Control-Allow-Origin':  '*',
 					'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
 					'Access-Control-Allow-Headers': 'Content-Type',
-					'Access-Control-Max-Age'      : 100
+					'Access-Control-Max-Age':       100
 				});
 				response.end();
 				break;

@@ -1,8 +1,9 @@
 /**
- * WebSocket pool
- * wraps all the work with ws instances
- * @license GNU GENERAL PUBLIC LICENSE Version 3
+ * WebSocket pool.
+ * Wraps all the work with ws instances.
+ *
  * @author DarkPark
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
  */
 
 'use strict';
@@ -14,14 +15,14 @@ var log = require('./logger').ws,
 
 // exports the wrapper object
 module.exports = {
-
 	/**
-	 * New WebSocket creation
+	 * New WebSocket creation.
+	 *
 	 * @param {String} name unique identifier for session
 	 * @param {Object} socket websocket resource
 	 * @return {Boolean} true if was deleted successfully
 	 */
-	add : function ( name, socket ) {
+	add: function ( name, socket ) {
 		var self = this;
 
 		// check input
@@ -30,19 +31,19 @@ module.exports = {
 
 			// main data structure
 			pool[name] = {
-				socket : socket,
-				time   : +new Date(),
-				count  : 0,
-				active : true
+				socket: socket,
+				time: +new Date(),
+				count: 0,
+				active: true
 			};
 
 			// disable link on close
-			pool[name].socket.on('close', function() {
+			pool[name].socket.on('close', function () {
 				self.remove(name);
 			});
 
 			// await for an answer
-			pool[name].socket.on('message', function(message) {
+			pool[name].socket.on('message', function ( message ) {
 				// has link to talk back
 				if ( pool[name].response ) {
 					log('ws', 'get', name, message);
@@ -58,11 +59,12 @@ module.exports = {
 	},
 
 	/**
-	 * Clear resources on WebSocket deletion
+	 * Clear resources on WebSocket deletion.
+	 *
 	 * @param {String} name session name
 	 * @return {Boolean} true if was deleted successfully
 	 */
-	remove : function ( name ) {
+	remove: function ( name ) {
 		// valid connection
 		if ( name in pool ) {
 			log('ws', 'exit', name, 'close');
@@ -75,30 +77,33 @@ module.exports = {
 	},
 
 	/**
-	 * Detailed information of the named WebSocket instance
+	 * Detailed information of the named WebSocket instance.
+	 *
 	 * @param {String} name session name
-	 * @return {{active:Boolean, count:Number}|{active:Boolean}}
+	 *
+	 * @return {{active:Boolean, count:Number}|{active:Boolean}} info
 	 */
-	info : function ( name ) {
+	info: function ( name ) {
 		// valid connection
 		if ( name in pool ) {
 			return {
-				active : pool[name].active,
-				count  : pool[name].count
+				active: pool[name].active,
+				count:  pool[name].count
 			};
 		}
 
 		// failure
-		return {active:false};
+		return {active: false};
 	},
 
 	/**
-	 * Forward the request to the given session
+	 * Forward the request to the given session.
+	 *
 	 * @param {String} name session name
 	 * @param {String} data post data from guest to host
 	 * @param {ServerResponse} response link to HTTP response object to send back data
 	 */
-	send : function ( name, data, response ) {
+	send: function ( name, data, response ) {
 		log('ws', 'send', name, data);
 		// store link to talk back when ready
 		pool[name].response = response;
@@ -106,5 +111,4 @@ module.exports = {
 		pool[name].socket.send(data);
 		pool[name].count++;
 	}
-
 };

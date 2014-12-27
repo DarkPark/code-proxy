@@ -1,45 +1,28 @@
 /**
- * Main server configuration
- * @license GNU GENERAL PUBLIC LICENSE Version 3
+ * Main server configuration.
+ *
  * @author DarkPark
+ * @license GNU GENERAL PUBLIC LICENSE Version 3
  */
 
 'use strict';
 
 module.exports = {
-	/**
-	 * Listening HTTP port to serve proxy files
-	 * @type {number}
-	 */
+	// listening HTTP port to serve proxy files
 	portHttp: 8800,
 
-	/**
-	 * Listening WebSocket port to serve requests
-	 * @type {number}
-	 */
+	// listening WebSocket port to serve requests
 	portWs: 8900,
 
-	/**
-	 * Time between connection/sending attempts (in ms)
-	 * @type {number}
-	 */
+	// time between connection/sending attempts (in ms)
 	retryDelay: 100,
 
-	/**
-	 * Amount of connection/sending attempts before give up
-	 * @type {number}
-	 */
+	// amount of connection/sending attempts before give up
 	retryLimit: 30,
 
-	/**
-	 * Full logging
-	 * @type {boolean}
-	 */
+	// full logging
 	logging: true,
 
-	/**
-	 * Session name
-	 * @type {string}
-	 */
-	name : 'anonymous'
+	// session name
+	name: 'anonymous'
 };
