@@ -17,17 +17,16 @@ Start as a standalone server:
 
 Connect to an existing project:
 
-```javascript
+```js
 require('code-proxy')();
 
 // or it's possible to redefine default options
-
 require('code-proxy')({
-	portHttp   : 8800,
-	portWs     : 8900,
-	retryDelay : 100,
-	retryLimit : 30,
-	logging    : true
+	portHttp:   8800,
+	portWs:     8900,
+	retryDelay: 100,
+	retryLimit: 30,
+	logging:    true
 });
 ```
 
@@ -39,7 +38,7 @@ require('code-proxy')({
 <script type="text/javascript" src="host.js"></script>
 ```
 
-```javascript
+```js
 // default host/port/session
 var proxy = new ProxyHost();
 
@@ -58,7 +57,7 @@ function doSomething ( param ) {
 <script type="text/javascript" src="guest.js"></script>
 ```
 
-```javascript
+```js
 // default host/port/session
 var proxy = new ProxyGuest();
 
@@ -72,11 +71,11 @@ proxy.call('doSomething', ['test data']);
 
 Proxy server host/port and session name can be redefined on both host and guest:
 
-```javascript
+```js
 var proxy = new ProxyGuest({
-	host : '127.0.0.1',
-	port : 8800,
-	name : 'anonymous'
+	host: '127.0.0.1',
+	port: 8800,
+	name: 'anonymous'
 });
 ```
 
