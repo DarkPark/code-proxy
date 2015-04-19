@@ -13,8 +13,8 @@
 	},
 	"license" : "GPL-3.0",
 	"dependencies": {
-		"ws"         : "^0.7.0",
-		"tty-colors" : "^0.0.4",
+		"ws"         : "^0.7.1",
+		"tty-colors" : "^0.0.5",
 		"node-static": "^0.7.6"
 	},
 	"keywords": ["call", "exec", "eval", "code", "proxy", "remote", "browser", "http", "websocket"]
