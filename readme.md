@@ -1,3 +1,9 @@
+code-proxy
+==========
+
+[![NPM version](https://img.shields.io/npm/v/code-proxy.svg?style=flat-square)](https://www.npmjs.com/package/code-proxy)
+[![Dependencies Status](https://img.shields.io/david/darkpark/code-proxy.svg?style=flat-square)](https://david-dm.org/darkpark/code-proxy)
+
 A [Node.js](http://nodejs.org) tools that give the ability to execute JavaScript code in one client browser and to get the results in another.
 Based on HTTP (for static files and sync post requests) and WebSocket (for server-host communications) technologies.
 Supports [CommonJS](http://www.commonjs.org/) modules and can be used with [Browserify](http://browserify.org/) on the client-side.
