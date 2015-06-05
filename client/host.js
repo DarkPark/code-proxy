@@ -16,8 +16,8 @@ function ProxyHost ( options ) {
 	// prepare
 	var name;
 
-    // connection with server
-    this.active = false;
+	// connection with server
+	this.active = false;
 
 	/**
 	 * proxy instance configuration
@@ -73,20 +73,20 @@ ProxyHost.prototype.connect = function () {
 	 * event hook
 	 * @callback
 	 */
-	this.socket.onopen = function(){
+	this.socket.onopen = function () {
 		self.log('core', 0, true, 'connection established');
 
-        self.active = true;
+		self.active = true;
 	};
 
 	/**
 	 * event hook
 	 * @callback
 	 */
-	this.socket.onclose = function(){
+	this.socket.onclose = function () {
 		self.log('core', 0, false, 'no connection');
 
-        self.active = false;
+		self.active = false;
 
 		if ( self.config.reconnect ) {
 			setTimeout(function () {

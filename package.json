@@ -13,7 +13,7 @@
 	},
 	"license" : "GPL-3.0",
 	"dependencies": {
-		"ws"         : "^0.7.1",
+		"ws"         : "^0.7.2",
 		"tty-colors" : "^0.0.6",
 		"node-static": "^0.7.6"
 	},
